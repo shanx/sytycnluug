@@ -4,10 +4,8 @@
 <head>
     <title>Ratezzz - NLUUG 2012 presentations</title>
     <!-- Bootstrap -->
-    <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap.no-icons.min.css" rel="stylesheet" media="screen">
-    <link href="http://netdna.bootstrapcdn.com/font-awesome/2.0/css/font-awesome.css" rel="stylesheet" media="screen">
-    <link href="{% static "css/starrating.css" %}" media="screen">
-
+    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap.no-icons.min.css" rel="stylesheet" media="screen">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/2.0/css/font-awesome.css" rel="stylesheet" media="screen">
 </head>
 <body>
 <h1>Come rate some...</h1>
@@ -15,30 +13,36 @@
     <thead>
         <th>Name</th>
         <th>Presenters</th>
-        <th>Rating</th>
         <th>My rating</th>
     </thead>
     <tbody>
+        {% for talk in talks %}
         <tr>
-            <td>Python</td>
-            <td>Jan-Jaap Driessen, Remco Wendt</td>
-            <td>5+</td>
+            <td>{{ talk.name }}</td>
+            <td>{{ talk.speakers }}</td>
             <td>
-                <div class="well well-small">
-                    <span class="rating">
-                        <span class="star"></span>
-                        <span class="star"></span>
-                        <span class="star"></span>
-                        <span class="star"></span>
-                        <span class="star"></span>
-                    </span>
-                </div>
+                <div class="well well-small star-rating" data-rating="3"></div>
             </td>
         </tr>
+        {% endfor %}
     </tbody>
 </table>
 
 
-<script src="http://code.jquery.com/jquery-latest.js"></script>
-<script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script></body>
+<script src="//code.jquery.com/jquery-latest.js"></script>
+<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
+<script src="https://raw.github.com/wbotelhos/raty/master/js/jquery.raty.min.js"></script>
+
+<script type="text/javascript">
+    $(function() {
+        $.fn.raty.defaults.path = 'http://wbotelhos.com/raty/img/';
+
+        $('.star-rating').raty({
+            score: function() {
+                return $(this).attr('data-rating');
+            }
+        });
+    });
+</script>
+</body>
 </html>
