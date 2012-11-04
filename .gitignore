@@ -6,3 +6,5 @@ bin
 local
 lib
 include
+share
+*.swp
