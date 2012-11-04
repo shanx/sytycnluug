@@ -9,3 +9,8 @@ include
 share
 *.swp
 .Python
+.installed.cfg
+develop-eggs
+parts
+src/sytycnluug.egg-info
+sytycnluug.db

@@ -13,4 +13,5 @@ setup(
         'setuptools',
         'lxml',
         'Django',
+        'south',
         ])
