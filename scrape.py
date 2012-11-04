@@ -1,6 +1,11 @@
 import lxml.html
 import urllib
 import re
+import StringIO
+import csv
+
+output = StringIO.StringIO()
+writer = csv.writer(output)
 
 url = 'https://www.nluug.nl/events/nj12/programma.html'
 
@@ -17,4 +22,7 @@ for entry in root.xpath('//table[@id="schedule"]//td[a]'):
     speaker = ''.join(entry.xpath('text()'))
     speaker = re.sub('\([0-9]+ minuten\)', '', speaker)
     speaker = speaker.strip()
-    print url, talk_title, speaker
+
+    writer.writerow((url, talk_title, speaker))
+
+print output.getvalue()
