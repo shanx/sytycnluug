@@ -8,4 +8,6 @@ html = urllib.urlopen(url).read()
 root = lxml.html.fromstring(html)
 for entry in root.xpath('//table[@id="schedule"]//td[a]'):
     anchor = entry.xpath('a')[0]
-    print anchor.get('href')
+    url = anchor.get('href')
+    talk_title = anchor.text
+    print url, talk_title
