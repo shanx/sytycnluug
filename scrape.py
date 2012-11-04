@@ -9,5 +9,5 @@ root = lxml.html.fromstring(html)
 for entry in root.xpath('//table[@id="schedule"]//td[a]'):
     anchor = entry.xpath('a')[0]
     url = anchor.get('href')
-    talk_title = anchor.text
+    talk_title = ' '.join(anchor.text.split())
     print url, talk_title
