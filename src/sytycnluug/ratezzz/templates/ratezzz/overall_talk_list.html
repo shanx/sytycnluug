@@ -1,5 +1,6 @@
 <table class="table table-striped">
     <thead>
+    <th>Rank</th>
     <th>Name</th>
     <th>Presenters</th>
     <th>Average rating</th>
@@ -8,6 +9,7 @@
     <tbody>
     {% for talk in overall_talk_list %}
         <tr>
+            <th>{{ forloop.counter }}</th>
             <td>{{ talk.name }}</td>
             <td>{{ talk.speakers }}</td>
             <td>
