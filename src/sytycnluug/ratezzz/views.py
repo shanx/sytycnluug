@@ -42,4 +42,4 @@ class OverallView(ListView):
     context_object_name = "overall_talk_list"
     template_name = "ratezzz/overall_talk_list.html"
     queryset = Talk.objects.annotate(Avg('rating__rating'),
-        Count('rating')).order_by('-rating__count')
+        Count('rating')).order_by('-rating__count', '-rating__rating__avg')
