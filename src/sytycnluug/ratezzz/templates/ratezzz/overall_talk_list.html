@@ -1,0 +1,20 @@
+<table class="table table-striped">
+    <thead>
+    <th>Name</th>
+    <th>Presenters</th>
+    <th>Average rating</th>
+    <th>Total ratings</th>
+    </thead>
+    <tbody>
+    {% for talk in overall_talk_list %}
+        <tr>
+            <td>{{ talk.name }}</td>
+            <td>{{ talk.speakers }}</td>
+            <td>
+                <div class="well well-small overall-rating" data-rating="{{ talk.rating__rating__avg }}"></div>
+            </td>
+            <td>{{ talk.rating__count }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

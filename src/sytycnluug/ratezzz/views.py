@@ -1,8 +1,10 @@
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.utils.crypto import get_random_string
-from django.views.generic import  View
+from django.views.generic import  View, ListView
+from django.db.models import Avg, Count
+
 from sytycnluug.ratezzz.models import Talk, Rating
 
 RATER_COOKIE = 'rater_id'
@@ -23,11 +25,11 @@ class TalkView(View):
         return response
 
     def post(self, request, pk):
+        rater_id = request.COOKIES.get(RATER_COOKIE)
+
         talk = Talk.objects.get(pk=pk)
-        rating, is_created = talk.rating_set.get_or_create(
-            rater_id=request.COOKIES['rater_id'],
-            defaults={'rating': request.POST['rating']}
-        )
+        rating, is_created = talk.rating_set.get_or_create(rater_id=rater_id,
+            defaults={'rating': request.POST['rating']})
 
         if not is_created:
             rating.rating = request.POST['rating']
@@ -35,3 +37,9 @@ class TalkView(View):
 
         return HttpResponse()
 
+
+class OverallView(ListView):
+    context_object_name = "overall_talk_list"
+    template_name = "ratezzz/overall_talk_list.html"
+    queryset = Talk.objects.annotate(Avg('rating__rating'),
+        Count('rating')).order_by('-rating__count')

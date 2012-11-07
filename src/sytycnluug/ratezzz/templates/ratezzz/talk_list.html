@@ -1,9 +1,7 @@
-{% load staticfiles %}
 <!DOCTYPE html>
 <html>
 <head>
     <title>Ratezzz - NLUUG 2012 presentations</title>
-    <!-- Bootstrap -->
     <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap.no-icons.min.css" rel="stylesheet" media="screen">
     <link href="//netdna.bootstrapcdn.com/font-awesome/2.0/css/font-awesome.css" rel="stylesheet" media="screen">
 </head>
@@ -19,6 +17,7 @@
     <div class="row-fluid">
         <div class="span6">
             <h2>Totals</h2>
+            <div id="overall-talks"></div>
         </div>
         <div class="span6">
             <h2>Your ratings</h2>
@@ -56,13 +55,23 @@
 </div>
 
 
-
-
 <script src="//code.jquery.com/jquery-latest.js"></script>
 <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
 <script src="https://raw.github.com/wbotelhos/raty/master/js/jquery.raty.min.js"></script>
 
 <script type="text/javascript">
+    function load_overall() {
+        $('#overall-talks').load('/ratezzz/overall/', function() {
+            $('.overall-rating').raty({
+                readOnly : true,
+                score: function() {
+                    return $(this).attr('data-rating');
+                }
+            });
+
+        });
+    }
+
     $(function() {
         $.fn.raty.defaults.path = 'http://wbotelhos.com/raty/img/';
 
@@ -75,6 +84,11 @@
                 $.post(url, {rating: score});
             }
         });
+
+        load_overall();
+        setInterval(function() {
+            load_overall();
+        }, 1000);
     });
 </script>
 </body>
