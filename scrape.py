@@ -1,3 +1,4 @@
+import sys
 import lxml.html
 import urllib
 import re
@@ -25,4 +26,4 @@ for entry in root.xpath('//table[@id="schedule"]//td[a]'):
 
     writer.writerow((url, talk_title, speaker))
 
-print output.getvalue()
+sys.stdout.write(output.getvalue())
