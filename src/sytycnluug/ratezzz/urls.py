@@ -1,7 +1,8 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import patterns, url
 
-from .views import IndexView
+from .views import TalkView
 
 urlpatterns = patterns('',
-    url(r'^$', IndexView.as_view()),
+    url(r'^$', TalkView.as_view(), name='talks.list'),
+    url(r'^(?P<pk>\d+)/$', TalkView.as_view(), name='talks.rate'),
 )

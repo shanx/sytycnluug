@@ -1,20 +1,37 @@
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.views.generic import TemplateView
-from django.core.urlresolvers import reverse_lazy
+from django.http import HttpResponse, Http404
+from django.shortcuts import render_to_response
+from django.template import RequestContext
+from django.utils.crypto import get_random_string
+from django.views.generic import  View
 from sytycnluug.ratezzz.models import Talk, Rating
 
-class RatingCreate(CreateView):
-    model = Rating
+RATER_COOKIE = 'rater_id'
 
-class IndexView(TemplateView):
-    template_name = "index.html"
 
-    def get_context_data(self, **kwargs):
-        context = super(IndexView, self).get_context_data(**kwargs)
+class TalkView(View):
+    def get(self, request):
+        rater_id = request.COOKIES.get(RATER_COOKIE, get_random_string())
 
-        context.update({
-            'talks': Talk.objects.all()
-        })
+        context = {
+            'ratings': Rating.objects.filter(rater_id=rater_id),
+            'unrated_talks': Talk.objects.exclude(rating__rater_id=rater_id)
+        }
 
-        return context
+        response = render_to_response('ratezzz/talk_list.html',
+            context, context_instance=RequestContext(request))
+        response.set_cookie(RATER_COOKIE, rater_id)
+        return response
+
+    def post(self, request, pk):
+        talk = Talk.objects.get(pk=pk)
+        rating, is_created = talk.rating_set.get_or_create(
+            rater_id=request.COOKIES['rater_id'],
+            defaults={'rating': request.POST['rating']}
+        )
+
+        if not is_created:
+            rating.rating = request.POST['rating']
+            rating.save()
+
+        return HttpResponse()
 

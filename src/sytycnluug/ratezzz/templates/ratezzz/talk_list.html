@@ -1,0 +1,81 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ratezzz - NLUUG 2012 presentations</title>
+    <!-- Bootstrap -->
+    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap.no-icons.min.css" rel="stylesheet" media="screen">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/2.0/css/font-awesome.css" rel="stylesheet" media="screen">
+</head>
+<body>
+
+<div class="navbar">
+    <div class="navbar-inner">
+        <a class="brand" href="#">So You Think You Can Netherlands Local Unix Users Group?</a>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span6">
+            <h2>Totals</h2>
+        </div>
+        <div class="span6">
+            <h2>Your ratings</h2>
+            <table class="table table-striped">
+                <thead>
+                <th>Name</th>
+                <th>Presenters</th>
+                <th>My rating</th>
+                </thead>
+                <tbody>
+                {% for rating in ratings %}
+                    {% with rating.talk as talk %}
+                        <tr>
+                            <td>{{ talk.name }}</td>
+                            <td>{{ talk.speakers }}</td>
+                            <td>
+                                <div class="well well-small star-rating" data-rating="{{ rating.rating }}" data-url="{{ talk.get_absolute_url }}"></div>
+                            </td>
+                        </tr>
+                    {% endwith %}
+                {% endfor %}
+                {% for talk in unrated_talks %}
+                    <tr>
+                        <td>{{ talk.name }}</td>
+                        <td>{{ talk.speakers }}</td>
+                        <td>
+                            <div class="well well-small star-rating" data-rating="0" data-url="{{ talk.get_absolute_url }}"></div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="//code.jquery.com/jquery-latest.js"></script>
+<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
+<script src="https://raw.github.com/wbotelhos/raty/master/js/jquery.raty.min.js"></script>
+
+<script type="text/javascript">
+    $(function() {
+        $.fn.raty.defaults.path = 'http://wbotelhos.com/raty/img/';
+
+        $('.star-rating').raty({
+            score: function() {
+                return $(this).attr('data-rating');
+            },
+            click: function(score, evt) {
+                var url = $(evt.target).parents('div').attr('data-url');
+                $.post(url, {rating: score});
+            }
+        });
+    });
+</script>
+</body>
+</html>
