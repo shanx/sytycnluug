@@ -61,7 +61,10 @@
 
 <script type="text/javascript">
     function load_overall() {
+        old_ranks = rank();
         $('#overall-talks').load('/ratezzz/overall/', function() {
+            update_delta(old_ranks);
+
             $('.overall-rating').raty({
                 readOnly : true,
                 score: function() {
@@ -69,6 +72,29 @@
                 }
             });
 
+        });
+    }
+
+    function rank() {
+        var rank = {};
+        $('#overall-talks tbody tr').each(function(index, item) {
+            // Assume first TD-column is the name.
+            var name = $(item).find('td:first').text();
+            // Assume the index is the rank (ie. sorted on rank).
+            rank[name] = index;
+        });
+        return rank;
+    }
+
+    function update_delta(old_ranks) {
+        $('#overall-talks tbody tr').each(function(index, item) {
+            var name = $(item).find('td:first').text();
+            var delta = old_ranks[name] - index;
+
+            if (delta > 0)
+                $(item).find('th').append(' <span class="badge badge-success">' + delta + ' <i class="icon-arrow-up"></i></span>');
+            else if (delta < 0)
+                $(item).find('th').append(' <span class="badge badge-important">' + (delta * -1) + ' <i class="icon-arrow-down"></i></span>');
         });
     }
 
@@ -88,7 +114,7 @@
         load_overall();
         setInterval(function() {
             load_overall();
-        }, 1000);
+        }, 2000);
     });
 </script>
 </body>
