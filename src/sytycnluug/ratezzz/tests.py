@@ -15,10 +15,10 @@ class TalkViewTests(TestCase):
         self.assertRedirects(self.client.get('/'), '/ratezzz/')
 
     def test_rate_talk(self):
-        # Talk 2 doesn't have a rating
+        # Talk doesn't have a rating
         self.assertFalse(self.talk.rating_set.exists())
 
-        # Sending post request to /2/ creates a rating for talk 2
+        # Sending post request to /2/ creates a rating for talk
         self.client.post('/ratezzz/1/', data={'rating': 5})
         rating = self.talk.rating_set.get()
         self.assertEqual(rating.rating, 5)
